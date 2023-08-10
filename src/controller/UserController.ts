@@ -1,53 +1,60 @@
+import { QueryRunner } from 'typeorm';
 import { AppDataSource } from "../data-source"
 import { NextFunction, Request, Response } from "express"
 import { User } from "../entity/User"
-
-export class UserController {
-
-    private userRepository = AppDataSource.getRepository(User)
-
-    async all(request: Request, response: Response, next: NextFunction) {
-        return this.userRepository.find()
-    }
-
-    async one(request: Request, response: Response, next: NextFunction) {
-        const id = parseInt(request.params.id)
+import { QueryExpressionMap } from 'typeorm/query-builder/QueryExpressionMap';
+import { UserService } from '../services/user-service';
+import { HttpStatusCode } from '../enum/http-status-code.enum';
 
 
-        const user = await this.userRepository.findOne({
-            where: { id }
-        })
+    const queryRunner: QueryRunner = AppDataSource.createQueryRunner();
 
-        if (!user) {
-            return "unregistered user"
+    const userService: UserService = new UserService(queryRunner)
+    
+    export const all = async (request: Request, response: Response, next: NextFunction) => {
+        try{
+            const users = await userService.getUsers();
+            return response.status(HttpStatusCode.OK).json(users)
+        }catch(error){
+            return response.status(HttpStatusCode.InternalServerError).json(error)
         }
-        return user
     }
 
-    async save(request: Request, response: Response, next: NextFunction) {
-        const { firstName, lastName, age } = request.body;
-
-        const user = Object.assign(new User(), {
-            firstName,
-            lastName,
-            age
-        })
-
-        return this.userRepository.save(user)
-    }
-
-    async remove(request: Request, response: Response, next: NextFunction) {
-        const id = parseInt(request.params.id)
-
-        let userToRemove = await this.userRepository.findOneBy({ id })
-
-        if (!userToRemove) {
-            return "this user not exist"
+    export const  one = async (request: Request, response: Response, next: NextFunction) => {
+        
+        try{
+            const id = parseInt(request.params.id)
+            const user = await userService.getUserById(id);
+            return response.status(HttpStatusCode.OK).json(user)
+        }catch(error){
+            return response.status(HttpStatusCode.InternalServerError).json(error)
         }
-
-        await this.userRepository.remove(userToRemove)
-
-        return "user has been removed"
     }
 
-}
+    export const save  = async (request: Request, response: Response, next: NextFunction) => {
+        
+
+        try{
+            const { firstName, lastName, age } = request.body;
+            const user = Object.assign(new User(), {
+                firstName,
+                lastName,
+                age
+            })
+            const result = await userService.createUser(user);
+            return response.status(HttpStatusCode.OK).json(result)
+        }catch(error){
+            return response.status(HttpStatusCode.InternalServerError).json(error)
+        }
+    }
+
+    export const remove = async (request: Request, response: Response, next: NextFunction) => {
+        
+        try{
+            const id = parseInt(request.params.id)
+            const user = await userService.remove(id);
+            return response.status(HttpStatusCode.OK).json(user)
+        }catch(error){
+            return response.status(HttpStatusCode.InternalServerError).json(error)
+        }
+    }
