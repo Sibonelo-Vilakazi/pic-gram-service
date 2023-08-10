@@ -18,4 +18,4 @@ volumes:
   postgres-db:
 
 networks:
-  overlay:cls
+  overlay:
