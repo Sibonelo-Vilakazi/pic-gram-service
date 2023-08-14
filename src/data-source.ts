@@ -9,9 +9,9 @@ export const AppDataSource = new DataSource({
     username: "pix_user",
     password: "pixservice123",
     database: "pix_reaction_db",
-    synchronize: true,
+    synchronize: false,
     logging: false,
-    entities: [User],
-    migrations: [],
+    entities: ["src/entity/**/*.ts"],
+    migrations: ["src/migration/**/*.ts"],
     subscribers: [],
 })

@@ -15,4 +15,10 @@ export class User {
     @Column()
     age: number
 
+    @Column() 
+    password: string
+    
+    @Column({type: 'bool'})
+    active: boolean
+
 }
