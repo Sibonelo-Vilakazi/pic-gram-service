@@ -1,5 +1,5 @@
 import { QueryRunner, Repository } from "typeorm"
-import { User } from "../entity/User"
+import { User } from "../entity/Users"
 
 
 export class UserService { 
