@@ -2,7 +2,6 @@ import * as express from "express"
 import * as bodyParser from "body-parser"
 import { Request, Response } from "express"
 import { AppDataSource } from "./data-source"
-import { Routes } from "./routes";
 import { userRouter } from "./routes/user-routes"
 require('dotenv').config();
 
