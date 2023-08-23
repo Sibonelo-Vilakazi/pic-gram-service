@@ -1,5 +1,4 @@
-import * as express from "express"
-import * as bodyParser from "body-parser"
+import * as express from "express";
 import { Request, Response } from "express"
 import { AppDataSource } from "./data-source"
 import { userRouter } from "./routes/user-routes"
