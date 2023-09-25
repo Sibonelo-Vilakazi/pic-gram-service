@@ -2,6 +2,7 @@ import * as express from "express";
 import { Request, Response } from "express"
 import { AppDataSource } from "./data-source"
 import { userRouter } from "./routes/user-routes"
+import { authRouter } from "./routes/auth.route";
 require('dotenv').config();
 
 AppDataSource.initialize().then(async () => {
@@ -12,6 +13,7 @@ AppDataSource.initialize().then(async () => {
     const app = express()
     app.use(express.json())
     app.use('/users', userRouter)
+    app.use('/auth', authRouter)
     // start express server
     app.listen(port, host, () => {
         console.log(`[ ready ] http://${host}:${port}`);
