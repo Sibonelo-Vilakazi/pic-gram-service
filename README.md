@@ -6,3 +6,4 @@ Social media API
 
 npm install --save-dev @types/express @types/bcrypt 
 npm install dotenv class-transformer class-validator 
+npm install --save-dev @types/multer 
