@@ -10,3 +10,5 @@ npm install --save-dev @types/multer
 
 npm install --save-dev @types/multer 
 npm install --save-dev multer
+
+npm install --save-dev jsonwebtoken @types/jsonwebtoken

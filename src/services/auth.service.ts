@@ -10,8 +10,7 @@ import * as dotenv from 'dotenv';
 dotenv.config();
 export class AuthService  {
 
-    userRepo: Repository<Users> = null;
-    saltRounds 
+    userRepo: Repository<Users> = null; 
     constructor(private queryRunner: QueryRunner){
         this.userRepo = this.queryRunner.manager.getRepository(Users);
     }
@@ -79,4 +78,6 @@ export class AuthService  {
         
         return response;
     }
+
+    
 }
