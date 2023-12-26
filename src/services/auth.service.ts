@@ -86,9 +86,14 @@ export class AuthService  {
             secrete: process.env.SECRET_KEY,
             userId: user.id
         }
-        const result:AuthResponse ={
+        const customRefresh = {...customToken};
+        customRefresh.secrete = process.env.REFRESH_SECRET_KEY;
+        customRefresh.expiry = '1d';
+
+        const result: AuthResponse ={
             user: user,
-            accessToken: await this.generateAccessToken(customToken)
+            accessToken: await this.generateAccessToken(customToken),
+            refreshToken: await this.generateRefreshToken(customRefresh)
         }
         response.result = result;
         
@@ -120,6 +125,11 @@ export class AuthService  {
     }
 
     async generateAccessToken(customToken: CustomTokenOptions): Promise<string>{
+        const response = await this.generateToken(customToken);
+        return response.result;
+    } 
+
+    async generateRefreshToken(customToken: CustomTokenOptions): Promise<string>{
         const response = await this.generateToken(customToken);
         return response.result;
     } 
