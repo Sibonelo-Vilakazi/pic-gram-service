@@ -107,7 +107,7 @@ export class AuthService  {
         }
 
 
-        const signOption: SignOptions = {
+        const signOption: SignOptions = {  
             expiresIn: customToken.expiry,
             audience: customToken.userId
         };
@@ -124,15 +124,15 @@ export class AuthService  {
         return response;
     }
 
-    async generateAccessToken(customToken: CustomTokenOptions): Promise<string>{
-        const response = await this.generateToken(customToken);
-        return response.result;
-    } 
-
+    
     async generateRefreshToken(customToken: CustomTokenOptions): Promise<string>{
         const response = await this.generateToken(customToken);
         return response.result;
     } 
-
+    
+    async generateAccessToken(customToken: CustomTokenOptions): Promise<string>{
+        const response = await this.generateToken(customToken);
+        return response.result;
+    } 
     
 }
