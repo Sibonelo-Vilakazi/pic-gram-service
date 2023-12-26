@@ -6,6 +6,9 @@ import { HttpStatusCode } from "../enum/http-status-code.enum";
 import { plainToClass } from "class-transformer";
 import { compare, hash } from "bcrypt";
 import * as dotenv from 'dotenv';
+import { CustomTokenOptions } from "../interfaces/custom-token-options";
+import { SignOptions, sign } from "jsonwebtoken";
+import { AuthResponse } from "../interfaces/auth.response";
 
 dotenv.config();
 export class AuthService  {
@@ -48,9 +51,9 @@ export class AuthService  {
         return response;
     }
 
-    async login(userData: AuthDto): Promise<APIResponse<Users>>{ 
+    async login(userData: AuthDto): Promise<APIResponse<AuthResponse>>{ 
         
-        const response: APIResponse<Users> ={
+        const response: APIResponse<AuthResponse> ={
             result: null,
             error: undefined
         }
@@ -74,10 +77,52 @@ export class AuthService  {
 
         delete user.password;
         delete user.isActive;
-        response.result = user;
+        const customToken: CustomTokenOptions = {
+            expiry: '1h',
+            payload: {
+                userId: user.id,
+                email: user.email
+            },
+            secrete: process.env.SECRET_KEY,
+            userId: user.id
+        }
+        const result:AuthResponse ={
+            user: user,
+            accessToken: await this.generateAccessToken(customToken)
+        }
+        response.result = result;
         
         return response;
     }
+
+    async generateToken(customToken: CustomTokenOptions): Promise<APIResponse<string>>{
+        const response: APIResponse<string> ={
+            result: null,
+            error: undefined
+        }
+
+
+        const signOption: SignOptions = {
+            expiresIn: customToken.expiry,
+            audience: customToken.userId
+        };
+
+        if (!customToken.secrete || customToken.secrete === '') {
+            throw new Error('Secrete key can not be null');
+        }
+
+
+        const token = sign(customToken.payload, customToken.secrete, signOption);
+
+
+        response.result = token;
+        return response;
+    }
+
+    async generateAccessToken(customToken: CustomTokenOptions): Promise<string>{
+        const response = await this.generateToken(customToken);
+        return response.result;
+    } 
 
     
 }
