@@ -1,12 +1,13 @@
 import { Router } from "express";
 import { upload } from "../middleware/upload.middleware";
-import { deletePosts, getAllPosts, getPostById, getUserPosts, updatePostCaption, uploadUserPost } from "../controller/post.controller";
+import { PostController} from "../controller/post.controller";
+import { protectedRoute } from "../middleware/auth.middleware";
 
 export const postRouter = Router();
-
-postRouter.route('/upload').post(upload.single('file'), uploadUserPost);
-postRouter.route('/getAllPosts').get(getAllPosts);
-postRouter.route('/getUserPosts/:userId').get(getUserPosts);
-postRouter.route('/getPostById/:postId').get(getPostById);
-postRouter.route('/updatePostCaption').put(updatePostCaption);
-postRouter.route('/deletePost/:userId/:postId').delete(deletePosts);
+const postController = new PostController()
+postRouter.route('/upload').post(upload.single('file'), postController.uploadUserPost);
+postRouter.route('/getAllPosts').get(protectedRoute ,postController.getAllPosts);
+postRouter.route('/getUserPosts/:userId').get(postController.getUserPosts);
+postRouter.route('/getPostById/:postId').get(postController.getPostById);
+postRouter.route('/updatePostCaption').put(postController.updatePostCaption);
+postRouter.route('/deletePost/:userId/:postId').delete(postController.deletePosts);

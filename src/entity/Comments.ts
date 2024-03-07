@@ -26,11 +26,7 @@ export class Comments{
     isActive: boolean
 
     @Column({type: 'timestamp', default: ()=> 'CURRENT_TIMESTAMP'})
-    createdDate: Date
-
-    // relationships 
-
-    // relationships 
+    createdDate: Date 
 
     @ManyToOne(() => Users, {eager: true})
     @JoinColumn({name: 'user_id', referencedColumnName: 'id'})

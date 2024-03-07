@@ -78,7 +78,7 @@ export class AuthService  {
         delete user.password;
         delete user.isActive;
         const customToken: CustomTokenOptions = {
-            expiry: '1h',
+            expiry: '1d',
             payload: {
                 userId: user.id,
                 email: user.email
