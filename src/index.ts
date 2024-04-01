@@ -5,6 +5,7 @@ import { userRouter } from "./routes/user-routes"
 import { authRouter } from "./routes/auth.route";
 import { postRouter } from "./routes/post.routes";
 import { initializeQueryRunnerMiddleware } from "./middleware/query-runner.middleware";
+import { commentRouter } from "./routes/comment.route";
 require('dotenv').config();
 
 AppDataSource.initialize().then(async () => {
@@ -19,6 +20,7 @@ AppDataSource.initialize().then(async () => {
     app.use('/users', userRouter);
     app.use('/auth', authRouter);
     app.use('/post', postRouter);
+    app.use('/comment', commentRouter);
     // start express server
     app.listen(port, host, () => {
         console.log(`[ ready ] http://${host}:${port}`);

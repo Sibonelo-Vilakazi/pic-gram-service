@@ -122,6 +122,29 @@ export class PostController {
         }
     
     }
+
+    likeUnlikePost = async (req: Request, res: Response) =>{
+        try{
+           this.queryRunner = req['queryRunner'] as QueryRunner;
+           const userID = req['userId'] as string;
+           const postID = req.params.postId as string;
+           console.log(postID, '  ', userID);
+           const postService = new PostService(this.queryRunner);
+           // call Service
+           const response = await postService.likeUnlikePost(postID, userID);
+           if(response.error){
+               return res.status(response.error.status).json(response.error);
+           }
+           await this.queryRunner.commitTransaction();
+           return res.json(response.result);
+       }catch(error){
+            console.log(error)
+           await this.queryRunner.rollbackTransaction();
+           return res.status(HttpStatusCode.InternalServerError).json(error)
+       } finally{
+           await this.queryRunner.release()
+       }
+    }
     
      updatePostCaption = async (req: Request, res: Response) => {
         try{
